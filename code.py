@@ -106,7 +106,7 @@ def count():
     for i in data['guild']['members']:
         if(i['expHistory'][y+"-"+m+"-"+d]>=need):
             uuid = i["uuid"]
-            if(uuid in score,keys):
+            if(uuid in score.keys):
                 score[uuid]=score[uuid]+1
             else:
                 score[uuid]=1

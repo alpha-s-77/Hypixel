@@ -106,7 +106,7 @@ def count():
     for i in data['guild']['members']:
         if(i['expHistory'][y+"-"+m+"-"+d]>=need):
             uuid = i["uuid"]
-            if(uuid in score.keys):
+            if(uuid in str(score.keys())):
                 score[uuid]=score[uuid]+1
             else:
                 score[uuid]=1
@@ -122,7 +122,7 @@ def count():
                 f.write(datas["player"]["displayname"]+": " + str(score[uuid])+"\n")
         else:
             uuid = i["uuid"]
-            if(uuid in score.keys()):
+            if(uuid in str(score.keys())):
                 datas = requests.get(
                     url = "https://api.hypixel.net/player",
                     params = {

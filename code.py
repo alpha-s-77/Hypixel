@@ -58,7 +58,7 @@ def removescore():
         print("score.jsonを読込中...")
         with open('score.json') as f:
             score = json.load(f)
-            for i in score.keys():
+            for i in str(score.keys()):
                 if(i==uuidch):
                     score[i]-=int(removescore)
         with open('score.json',"w") as f:

@@ -29,9 +29,6 @@ score.json
 設定.json	
 	設定が保存されます。
 
-version 3.00
-Coming Soon...
-
 version 2.00
 追加機能
 セーブ機能を追加しました。

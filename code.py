@@ -7,7 +7,7 @@ import sys
 
 def save_data():
     print("[設定変更]")
-    print("APIKEYを入力してください。")
+    print("APIキーを入力してください。")
     print("APIキーはHypixelサーバーで/api newを入力して入手可能です。")
     apikey = input("API KEY>")
     guild_name = input("ギルド名>")

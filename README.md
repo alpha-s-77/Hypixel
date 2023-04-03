@@ -1,3 +1,5 @@
+<link href="style.css" rel="stylesheet" type="text/css">
+
 Hypixelのギルドのためのソースです。
 指定のEXP以上のプレイヤーをカウントします。
 1分間に120までのリクエストしか送れないので時間がかかる場合もあります。ご了承ください。
@@ -26,7 +28,7 @@ uuidmcid.json
 score.json
 	スコアが保存されます。
 
-設定.json	
+設定.json
 	設定が保存されます。
 
 version 2.00

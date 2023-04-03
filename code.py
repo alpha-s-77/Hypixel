@@ -17,7 +17,7 @@ def save_data():
     with open("設定.json", "w") as f:
         json.dump(data, f, indent=4)
     print("保存完了!")
-    print("")
+    print("この後, 例外処理が発生します。再度実行をやり直すことでカウントを開始できます。")
 
 
 def load_data():
@@ -58,13 +58,13 @@ def remove_score():
             if i == uuidch:
                 score[i] = score[i] - int(removescore)
                 if score[i] < 0:
-                    print(uuidch + "-- ERROR(これを実行すると得点は-1以下になります)")
+                    print(uuidch + "-- 警告: これを実行したことにより得点は-1以下になりました")
                 print("減少させました!")
                 print(uuidch + "-->" + str(score[i]) + "pts")
         with open('score.json', "w") as f:
             json.dump(score, f, indent=4)
         print("完了!")
-        print("次回のカウント時に反映されます。ERRORは反映されません。")
+        print("次回のカウント時に反映されます。")
     else:
         print("ファイルが見つかりませんでした。")
 
@@ -88,7 +88,7 @@ def count():
         with open('score.json') as f:
             score = json.load(f)
     else:
-        print("ファイルが見つかりませんでした。score.jsonを作成しています.")
+        print("ファイルが見つかりませんでした。score.jsonを作成しています...")
         score = {}
 
     # 今日の情報を取得
@@ -105,8 +105,15 @@ def count():
     # 必要なEXP量(数値)
     need = int(savedata["exp"])
     ############################################################
+    print("APIから情報を取得し, 条件を確認しています...")
     playerinfo = {}
+    count = 0
+    total = len(data['guild']['members'])
     for i in data['guild']['members']:
+        count += 1
+        progress = count / total * 100
+        sys.stdout.write(f"\rProgress: [{int(progress)}%] {'='*int(progress/2)}{' '*(50-int(progress/2))}")
+        sys.stdout.flush()
         if i['expHistory'][y + "-" + m + "-" + d] >= need:
             uuid = i["uuid"]
             if uuid in str(score.keys()):
@@ -136,7 +143,9 @@ def count():
                 playerinfo[uuid] = (datas["player"]["displayname"])
                 with open("アップロード.bat", "a") as f:
                     f.write(datas["player"]["displayname"] + ": " + str(score[uuid]) + "\n")
-
+    sys.stdout.write(f"\rProgress: [100%] {'='*50}")
+    print("")
+    print("uuidとmcidについてそれぞれを紐づけ中...")
     with open("uuidmcid.json", 'w') as f:
         json.dump(playerinfo, f, indent=4)
 
@@ -144,12 +153,30 @@ def count():
     print("データを書き込み中...")
     with open('score.json', 'w') as f:
         json.dump(score, f, indent=4)
-    ##
+    ##sort開始
+    print("並び替え中です...")
+    sort_results()
+    print("正常にすべての動作を完了しました。")
     print(">>> score.jsonを削除することでスコアを初期化します。")
 
+def sort_results():
+    with open('アップロード.bat', 'r') as f:
+        lines = f.readlines()
+
+    # プレイヤー名のリストを取得し、アルファベット順にソートする（大文字小文字を区別しない）
+    players = [line.split(',')[0].lower() for line in lines]
+    sorted_players = sorted(players)
+
+    # 行ごとにプレイヤー名を置換して、アップロード.batファイルに書き込む
+    with open('アップロード.bat', 'w') as f:
+        for player in sorted_players:
+            for line in lines:
+                if line.lower().startswith(player):
+                    f.write(line)
+                    break
 
 def main(args):
-    print("CMD.EXEからの引数を受け取っています...")
+    print("[System] 引数を受け取っています...")
     if args[1] == "count":
         count()
     elif args[1] == "option":
@@ -158,6 +185,8 @@ def main(args):
         remove_score()
     elif args[1] == "mcid":
         search()
+    else:
+        print("引数が無効です。")
 
 
 if __name__ == "__main__":
